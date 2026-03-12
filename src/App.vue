@@ -81,7 +81,7 @@ const eliminarPersona = async (id, personaActualizada) => {
         method: "DELETE"
     });
 
-    personas.value= personas.value.filter(u => u.id !== persona_id);
+    personas.value= personas.value.filter(u => u.id !== personaActualizada);
   } catch(error) {
     console.log(error)
   }
