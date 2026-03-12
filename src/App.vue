@@ -52,7 +52,14 @@ const agregarPersona = async (persona) => {
     });
 
     const personaCreada = await response.json();
-    personas.value = [...personas.value, personaCreada];
+
+    let id = 0;
+
+    if (personas.value.length > 0) {
+        id = personas.value[personas.value.length - 1].id + 1;
+    }
+
+    personas.value = [...personas.value, { ...personaCreada, id }];
   } catch (error) {
     console.error(error);
   }
@@ -81,7 +88,7 @@ const eliminarPersona = async (persona_id) => {
         method: "DELETE"
     });
 
-    personas.value= personas.value.filter(u => u.id !== persona_id);
+    personas.value = personas.value.filter(u => u.id !== persona_id);
   } catch(error) {
     console.log(error)
   }
