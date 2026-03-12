@@ -20,42 +20,77 @@
 </template>
 
 <script setup>
-// Importacion del componente "TablaPersonas"
-import TablaPersonas from "@/components/TablaPersonas.vue";
-import FormularioPersona from "@/components/FormularioPersona.vue";
-import { ref } from "vue";
+import TablaPersonas from '@/components/TablaPersonas.vue'
+import FormularioPersona from '@/components/FormularioPersona.vue'
+import { ref, onMounted } from 'vue';
 
-// Declaración de variable reactiva 'personas' usando 'ref'
+defineOptions({
+  name: 'app',
+});
+
 const personas = ref([]);
 
-const agregarPersona = (persona) => {
-  let id = 0;
+const listadoPersonas = async () => {
+  // Metodo para obtener un listado de personas
+  try {
+    const response = await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/');
 
-  if (personas.value.length > 0) {
-    id = personas.value[personas.value.length - 1].id + 1;
+    personas.value = await response.json();
+  } catch(error) {
+    console.error(error)
   }
-
-  // actualizamos el valor del array creando un nuevo array con los valores existentes y agregando la nueva persona
-  personas.value = [...personas.value, { ...persona, id }];
+  
 };
 
-const eliminarPersona = (id) => {
+const agregarPersona = async (persona) => {
+  // Metodo para agregar una persona
   try {
-    personas.value = personas.value.filter((u) => u.id != id);
+    const response = await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/' , {
+        method: 'POST',
+        body: JSON.stringify(persona),
+        headers: {'Content-type': 'application/json; charset=UTF-8'},
+    });
+
+    const personaCreada = await response.json();
+    personas.value = [...personas.value, personaCreada];
   } catch (error) {
     console.error(error);
   }
 };
 
-const actualizarPersona = (id, personaActualizada) => {
+const actualizarPersona = async (persona_id) => {
+  // Metodo para eliminar una persona
   try {
-    personas.value = personas.value.map((persona) =>
-      persona.id === id ? personaActualizada : persona
-    );
-  } catch (error) {
-    console.error(error);
+    const response = await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/'+personaActualizada.id+'/', {
+        method: 'PUT',
+        body: JSON.stringify(personaActualizada),
+        headers: { 'Content-type': 'application/json; charset=UTF-8' },
+    });
+
+    const personaActualizadaJS = await response.json();
+    personas.value = personas.value.map(u => (u.id === personaActualizada.id ? personaActualizadaJS : u));
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const eliminarPersona = async (id, personaActualizada) => {
+  // Metodo para actualizar una persona
+  try {
+    await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/'+persona_id+'/', {
+        method: "DELETE"
+    });
+
+    personas.value= personas.value.filter(u => u.id !== persona_id);
+  } catch(error) {
+    console.log(error)
   }
 };
+
+// Fetch data when the component is mounted
+onMounted(() => {
+  listadoPersonas();
+});
 </script>
 
 <style>
