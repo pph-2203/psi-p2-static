@@ -58,7 +58,7 @@ const agregarPersona = async (persona) => {
   }
 };
 
-const actualizarPersona = async (personaActualizada) => {
+const actualizarPersona = async (id, personaActualizada) => {
   // Metodo para actualizar una persona
   try {
     const response = await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/'+personaActualizada.id+'/', {
@@ -74,14 +74,14 @@ const actualizarPersona = async (personaActualizada) => {
     }
 };
 
-const eliminarPersona = async (id, personaActualizada) => {
+const eliminarPersona = async (persona_id) => {
   // Metodo para eliminar una persona
   try {
-    await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/'+personaActualizada+'/', {
+    await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/'+persona_id+'/', {
         method: "DELETE"
     });
 
-    personas.value= personas.value.filter(u => u.id !== personaActualizada);
+    personas.value= personas.value.filter(u => u.id !== persona_id);
   } catch(error) {
     console.log(error)
   }
