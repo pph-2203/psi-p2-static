@@ -17,12 +17,18 @@
       </div>
     </div>
   </div>
+  <div>
+    <p>Count is {{ store.count }}</p>
+  </div>
 </template>
 
 <script setup>
 import TablaPersonas from '@/components/TablaPersonas.vue'
 import FormularioPersona from '@/components/FormularioPersona.vue'
 import { ref, onMounted } from 'vue';
+import { useCounterStore } from '@/stores/counter';
+
+const store = useCounterStore();
 
 defineOptions({
   name: 'app',
@@ -60,6 +66,7 @@ const agregarPersona = async (persona) => {
     }
 
     personas.value = [...personas.value, { ...personaCreada, id }];
+    store.increment()
   } catch (error) {
     console.error(error);
   }
